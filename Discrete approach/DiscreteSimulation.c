@@ -60,40 +60,10 @@ int main(){
 	/*FILE *f = fopen(F_filename, "w");
 	if (f == NULL){printf("Error opening file!\n");exit(1);	}
 */
-	//Initialise the ROAD
-	ROAD F;
-	F.length = r;
-	//printf("%d", F.length);
-	F.piles = (PILE *) malloc( ((int) F.length)*sizeof(PILE) );
-	for(int i = 0; i<r;i++){
-		//F.piles[i] = malloc(sizeof(PILE));
-        F.piles[i].height = f_max;
-        F.piles[i].f = 4;
-        //printf("%d", F.piles[i].length);
-        F.piles[i].blocks = (BLOCK *) malloc( ((int) F.piles[i].height)*sizeof(BLOCK));
-        for(int j = 0; j< (int) F.piles[i].f;j++){
-        	F.piles[i].blocks[j].filled = 1;
-        	F.piles[i].blocks[j].simbol = 'X';
-
-        }
-        for(int k = (int) F.piles[i].f; k < (int) F.piles[i].height;k++){
-        	F.piles[i].blocks[k].filled = 0;
-        	F.piles[i].blocks[k].simbol = 'O';
-        }
-    }
-
-    //Print ROAD  
-    //PrintRoad(F);
-   
-
-   /* double M[F.length][f_max];
-   for(int i = 0; i <F.length;i++){
-
-
-    }*/
-   ROAD F2;
-   InitialiseRoad(&F2, 4);
-   PrintRoad(F2);
+	//Initialise the ROAD	
+   ROAD road;
+   InitialiseRoad(&road, 3);
+   PrintRoad(road);
 
 
 
