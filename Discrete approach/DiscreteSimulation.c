@@ -10,6 +10,7 @@
 #define f_max (unsigned short) 11
 #define r (unsigned int) 60 //period of the road
 #define d (unsigned int) 7
+#define beta (unsigned int) 3
 
  #define max(a,b) \
    ({ __typeof__ (a) _a = (a); \
@@ -103,12 +104,14 @@ void IncrPile(ROAD * road, int xpos, int width){
 }
 
 void DecrPiles(ROAD * road, int xmin, int xmax, int width){
+	if(xmin < 0 || xmax <0){printf("\n DecrPiles: negative xmin or xmax"); exit(2);}
 	for(int xpos = xmin; xpos <= xmax;xpos++){
 		DecrPile(road, xpos, width);
 	}
 }
 
 void IncrPiles(ROAD * road, int xmin, int xmax, int width){
+	if(xmin < 0 || xmax <0){printf("\n IncrPiles: negative xmin or xmax"); exit(2);}
 	for(int xpos = xmin; xpos <= xmax;xpos++){
 		IncrPile(road, xpos, width);
 	}
@@ -126,9 +129,13 @@ int main(){
    ROAD road;
    char sep[] = "";
    InitialiseRoad(&road, 3, ' ', '.');
-   PrintRoad(road, sep);
 
    IncrPile(&road, 0, 1);
+   IncrPiles(&road, 24,28 ,1);
+   IncrPile(&road, 25, 1);
+   IncrPile(&road, 27, 2);
+
+
    PrintRoad(road, sep);
 
    //Initialise the WHEEL
@@ -136,8 +143,12 @@ int main(){
    wheel.diameter = d;
    wheel.xf = 1;
    wheel.x0 = 1-wheel.diameter;
+   wheel.elevation = road.piles[wheel.xf+1].f;
+   printf("%i", wheel.elevation);
 
-   int L = 2*wheel.diameter;
+   //int L = 2*wheel.diameter;
+   int L = (int) (beta * road.piles[wheel.xf-1].f);
+   printf("%d", L);
     //Jump
    wheel.xf += L;
    wheel.x0 += L;
@@ -149,25 +160,15 @@ int main(){
    DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
    PrintRoad(road, sep);
 
-   /*DecrPiles(&road, wheel.x0+1, wheel.xf , 2);
-   PrintRoad(road, sep);
-
-   DecrPiles(&road, wheel.x0+1, wheel.xf , 0);
-   PrintRoad(road, sep);*/
-
-
    wheel.elevation = road.piles[wheel.xf+1].f;
    printf("%i", wheel.elevation);
+   
+   L = (int) (beta * road.piles[wheel.xf-1].f);
 
-   printf("%d", max(1,2));
 
-   IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 8);
+  
 
-   PrintRoad(road, sep);
 
-   IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 2);
-
-   PrintRoad(road, sep);
 
    
 
