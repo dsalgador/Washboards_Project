@@ -19,10 +19,17 @@ void WriteMatrixToFile(FILE ** file, char * F){
 }
 
 void PrintRoad(ROAD road, char * sep){
+	char simbol;
 	for(int j = (int) (f_max-1); j >=0; j--){
-    	for(int i = 0; i <road.length;i++){    
+    	for(int i = 0; i <road.length;i++){  
+            if(road.piles[i].blocks[j].filled){
+            	simbol = road.simbol_filled;
+            }
+            else{simbol = road.simbol_empty;}
     	    printf(sep);	
-    		printf("%c" ,road.piles[i].blocks[j].simbol);
+    		printf("%c",simbol);
+
+
     	}
     	printf(sep);
     	printf("\n");
@@ -35,6 +42,10 @@ void PrintRoad(ROAD road, char * sep){
 
 void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, char simbol_filled){
 	(*F).length = r;
+	(*F).simbol_empty = simbol_empty;
+	(*F).simbol_filled = simbol_filled;
+
+
 	//printf("%d", F.length);
 	(*F).piles = (PILE *) malloc( ((int) (*F).length)*sizeof(PILE) );
 	for(int i = 0; i<r;i++){
@@ -45,12 +56,12 @@ void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, 
         (*F).piles[i].blocks = (BLOCK *) malloc( ((int) (*F).piles[i].height)*sizeof(BLOCK));
         for(int j = 0; j< (int) (*F).piles[i].f;j++){
         	(*F).piles[i].blocks[j].filled = 1;
-        	(*F).piles[i].blocks[j].simbol = simbol_filled;
+        	//(*F).piles[i].blocks[j].simbol = simbol_filled;
 
         }
         for(int k = (int) (*F).piles[i].f; k < (int) (*F).piles[i].height;k++){
         	(*F).piles[i].blocks[k].filled = 0;
-        	(*F).piles[i].blocks[k].simbol = simbol_empty;
+        	//(*F).piles[i].blocks[k].simbol = simbol_empty;
         }
     }
 }
