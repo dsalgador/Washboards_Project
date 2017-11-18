@@ -8,7 +8,7 @@
 
 #define F_filename "F_matrix.txt"
 #define f_max (unsigned short) 11
-#define r (unsigned int) 30 //period of the road
+#define r (unsigned int) 60 //period of the road
 
 
 void WriteMatrixToFile(FILE ** file, char * F){
@@ -18,19 +18,22 @@ void WriteMatrixToFile(FILE ** file, char * F){
     fclose(*file);
 }
 
-void PrintRoad(ROAD road){
+void PrintRoad(ROAD road, char * sep){
 	for(int j = (int) (f_max-1); j >=0; j--){
-    	for(int i = 0; i <road.length;i++){    	
-    		printf("|%c" ,road.piles[i].blocks[j].simbol);
+    	for(int i = 0; i <road.length;i++){    
+    	    printf(sep);	
+    		printf("%c" ,road.piles[i].blocks[j].simbol);
     	}
-    	printf("|\n");
+    	printf(sep);
+    	printf("\n");
     }
-
-    for(int k = 0; k < road.length;k++){printf("##");}
-
+    if(strcmp(sep, "") != 0){ 
+         for(int k = 0; k < road.length;k++){printf("##");}
+     }
+    else{for(int k = 0; k < road.length;k++){printf("#");} }
 }
 
-void InitialiseRoad(ROAD * F, unsigned short initial_height){
+void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, char simbol_filled){
 	(*F).length = r;
 	//printf("%d", F.length);
 	(*F).piles = (PILE *) malloc( ((int) (*F).length)*sizeof(PILE) );
@@ -42,16 +45,14 @@ void InitialiseRoad(ROAD * F, unsigned short initial_height){
         (*F).piles[i].blocks = (BLOCK *) malloc( ((int) (*F).piles[i].height)*sizeof(BLOCK));
         for(int j = 0; j< (int) (*F).piles[i].f;j++){
         	(*F).piles[i].blocks[j].filled = 1;
-        	(*F).piles[i].blocks[j].simbol = 'X';
+        	(*F).piles[i].blocks[j].simbol = simbol_filled;
 
         }
         for(int k = (int) (*F).piles[i].f; k < (int) (*F).piles[i].height;k++){
         	(*F).piles[i].blocks[k].filled = 0;
-        	(*F).piles[i].blocks[k].simbol = 'O';
+        	(*F).piles[i].blocks[k].simbol = simbol_empty;
         }
     }
-
-
 }
 
 int main(){
@@ -62,8 +63,9 @@ int main(){
 */
 	//Initialise the ROAD	
    ROAD road;
-   InitialiseRoad(&road, 3);
-   PrintRoad(road);
+   char sep[] = "";
+   InitialiseRoad(&road, 3, ' ', '.');
+   PrintRoad(road, sep);
 
 
 
