@@ -78,15 +78,21 @@ void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, 
 }
 
 void DecrPile(ROAD * road, int xpos, int width){
+	int width2 = min(width, max((*road).piles[xpos].f - width , (*road).piles[xpos].f ));
+	///if(  ((*road).piles[xpos].f - width) <0 ){width2 = }
+    width = width2;
 	(*road).piles[xpos].f = (*road).piles[xpos].f-width;
 	for(int i = 0; i < width;i++){
    		(*road).piles[xpos].blocks[(*road).piles[xpos].f+i].filled = 0;
    	}
+   
 
 }
 
 void IncrPile(ROAD * road, int xpos, int width){
-   // int width2 = min()
+    int width2 = min(width, f_max - (*road).piles[xpos].f); //check better?
+    width = width2;
+
 	(*road).piles[xpos].f = (*road).piles[xpos].f+width;
 	
 	   	//(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
@@ -141,6 +147,13 @@ int main(){
 
    DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
    PrintRoad(road, sep);
+
+   DecrPiles(&road, wheel.x0+1, wheel.xf , 2);
+   PrintRoad(road, sep);
+
+   DecrPiles(&road, wheel.x0+1, wheel.xf , 0);
+   PrintRoad(road, sep);
+
 
    wheel.elevation = road.piles[wheel.xf+1].f;
    printf("%i", wheel.elevation);
