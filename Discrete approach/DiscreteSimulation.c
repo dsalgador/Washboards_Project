@@ -130,6 +130,9 @@ int main(){
    DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
    PrintRoad(road, sep);
 
+   wheel.elevation = road.piles[wheel.xf+1].f;
+   printf("%i", wheel.elevation);
+
  
 
    

@@ -16,13 +16,12 @@ typedef struct {
 	unsigned int length; // road length 'r'	
 	PILE * piles; //pointer to the columns (PILEs)
 	char simbol_empty, simbol_filled;
-
 } ROAD;
 
 typedef struct {
 	unsigned int diameter; // road length 'r'	
 	int x0, xf;
-	unsigned short h; //current road height where the wheel is situated
+	unsigned short elevation; //current road height where the wheel is situated (elevation)
 } WHEEL;
 
 
