@@ -83,6 +83,20 @@ void IncrPile(ROAD * road, int xpos, int width){
    	}
 }
 
+void DecrPiles(ROAD * road, int xmin, int xmax, int width){
+	for(int xpos = xmin; xpos <= xmax;xpos++){
+		DecrPile(road, xpos, width);
+	}
+}
+
+void IncrPiles(ROAD * road, int xmin, int xmax, int width){
+	for(int xpos = xmin; xpos <= xmax;xpos++){
+		IncrPile(road, xpos, width);
+	}
+}
+
+
+
 int main(){
 
 	//Create, initialise file
@@ -95,20 +109,28 @@ int main(){
    InitialiseRoad(&road, 3, ' ', '.');
    PrintRoad(road, sep);
 
-   //Increment a pile
-   /*road.piles[d+1].f = road.piles[d+1].f+1;
-   road.piles[d+1].blocks[road.piles[d+1].f-1].filled = 1;*/
-   IncrPile(&road, d+1, 3);
+   IncrPile(&road, 0, 1);
    PrintRoad(road, sep);
 
-   //Decrement a pile
-   /*road.piles[d+1].f = road.piles[d+1].f-1;
-   road.piles[d+1].blocks[road.piles[d+1].f].filled = 0;*/
-   DecrPile(&road, d+1, 2);
-   PrintRoad(road, sep);
-   DecrPile(&road, d+1, 2);
+   //Initialise the WHEEL
+   WHEEL wheel;
+   wheel.diameter = d;
+   wheel.xf = 1;
+   wheel.x0 = 1-wheel.diameter;
+
+   int L = 2*wheel.diameter;
+    //Jump
+   wheel.xf += L;
+   wheel.x0 += L;
+  
+
+   IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 1);
    PrintRoad(road, sep);
 
+   DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
+   PrintRoad(road, sep);
+
+ 
 
    
 
@@ -127,5 +149,16 @@ int main(){
 	return 0;
 }
 
+/*
 
+  //Increment a pile
+   IncrPile(&road, d+1, 3);
+   PrintRoad(road, sep);
 
+   //Decrement a pile
+
+   DecrPile(&road, d+1, 2);
+   PrintRoad(road, sep);
+   DecrPile(&road, d+1, 2);
+   PrintRoad(road, sep);
+*/

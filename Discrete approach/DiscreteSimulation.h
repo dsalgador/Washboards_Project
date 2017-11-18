@@ -21,7 +21,7 @@ typedef struct {
 
 typedef struct {
 	unsigned int diameter; // road length 'r'	
-	unsigned int x0, xf;
+	int x0, xf;
 	unsigned short h; //current road height where the wheel is situated
 } WHEEL;
 
