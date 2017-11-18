@@ -67,6 +67,17 @@ void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, 
     }
 }
 
+void DecrPile(ROAD * road, int xpos, int width){
+	(*road).piles[xpos].f = (*road).piles[xpos].f-1;
+   	(*road).piles[xpos].blocks[(*road).piles[xpos].f].filled = 0;
+
+}
+
+void IncrPile(ROAD * road, int xpos, int width){
+	(*road).piles[xpos].f = (*road).piles[xpos].f+1;
+   	(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
+}
+
 int main(){
 
 	//Create, initialise file
@@ -80,14 +91,26 @@ int main(){
    PrintRoad(road, sep);
 
    //Increment a pile
-   road.piles[d+1].f = road.piles[d+1].f+1;
-   road.piles[d+1].blocks[road.piles[d+1].f-1].filled = 1;
+   /*road.piles[d+1].f = road.piles[d+1].f+1;
+   road.piles[d+1].blocks[road.piles[d+1].f-1].filled = 1;*/
+   IncrPile(&road, d+1, 1);
    PrintRoad(road, sep);
 
    //Decrement a pile
-   road.piles[d+1].f = road.piles[d+1].f-1;
-   road.piles[d+1].blocks[road.piles[d+1].f].filled = 0;
+   /*road.piles[d+1].f = road.piles[d+1].f-1;
+   road.piles[d+1].blocks[road.piles[d+1].f].filled = 0;*/
+   DecrPile(&road, d+1, 1);
    PrintRoad(road, sep);
+   DecrPile(&road, d+1, 1);
+   PrintRoad(road, sep);
+   DecrPile(&road, d+1, 1);
+   PrintRoad(road, sep);
+   IncrPile(&road, d+1, 1);
+   PrintRoad(road, sep);
+   IncrPile(&road, d+1, 1);
+   PrintRoad(road, sep);
+
+   
 
 
 
