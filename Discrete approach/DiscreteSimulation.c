@@ -11,6 +11,16 @@
 #define r (unsigned int) 60 //period of the road
 #define d (unsigned int) 7
 
+ #define max(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
+
+ #define min(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
+
 
 void WriteMatrixToFile(FILE ** file, char * F){
 	*file = fopen(F_filename, "a");
@@ -76,8 +86,10 @@ void DecrPile(ROAD * road, int xpos, int width){
 }
 
 void IncrPile(ROAD * road, int xpos, int width){
+   // int width2 = min()
 	(*road).piles[xpos].f = (*road).piles[xpos].f+width;
-   	//(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
+	
+	   	//(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
    	for(int i = 0; i < width;i++){
    		(*road).piles[xpos].blocks[(*road).piles[xpos].f-i-1].filled = 1;
    	}
@@ -133,7 +145,7 @@ int main(){
    wheel.elevation = road.piles[wheel.xf+1].f;
    printf("%i", wheel.elevation);
 
- 
+   printf("%d", max(1,2));
 
    
 
