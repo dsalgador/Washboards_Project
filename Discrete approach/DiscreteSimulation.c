@@ -31,6 +31,7 @@ void WriteMatrixToFile(FILE ** file, char * F){
 
 void PrintRoad(ROAD road, char * sep){
 	char simbol;
+	printf("\n");
 	for(int j = (int) (f_max-1); j >=0; j--){
     	for(int i = 0; i <road.length;i++){  
             if(road.piles[i].blocks[j].filled){
@@ -148,17 +149,25 @@ int main(){
    DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
    PrintRoad(road, sep);
 
-   DecrPiles(&road, wheel.x0+1, wheel.xf , 2);
+   /*DecrPiles(&road, wheel.x0+1, wheel.xf , 2);
    PrintRoad(road, sep);
 
    DecrPiles(&road, wheel.x0+1, wheel.xf , 0);
-   PrintRoad(road, sep);
+   PrintRoad(road, sep);*/
 
 
    wheel.elevation = road.piles[wheel.xf+1].f;
    printf("%i", wheel.elevation);
 
    printf("%d", max(1,2));
+
+   IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 8);
+
+   PrintRoad(road, sep);
+
+   IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 2);
+
+   PrintRoad(road, sep);
 
    
 
