@@ -4,25 +4,33 @@
 #include <math.h>
 
 
+#define F_filename "F_matrix.txt"
+
+void WriteMatrixToFile(FILE ** file, char * F){
+	*file = fopen(F_filename, "a");
+	if (*file == NULL){printf("Error changing to append 'a' file!\n");exit(1);	}
+	fprintf(*file, "Some text: %s\n", F);   
+    fclose(*file);
+
+}
+
 int main(){
 
-	//Print vector components to a file 
-	FILE *f = fopen("F_matrix.txt", "a");
+	//Create, initialise file
+	FILE *f = fopen(F_filename, "w");
 	if (f == NULL){printf("Error opening file!\n");exit(1);	}
 
-	/* print some text */
-	const char *text = "Write this to the file";
-	fprintf(f, "Some text: %s\n", text);
+	/* print some text to the file*/
 
-	fclose(f);
+	char *text = "Write this to the file";
+	WriteMatrixToFile(&f, text);
+	WriteMatrixToFile(&f, text);
+	
 
-
-
-
-
-
-
+	
 
 	return 0;
 }
+
+
 
