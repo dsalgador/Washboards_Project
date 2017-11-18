@@ -9,6 +9,7 @@
 #define F_filename "F_matrix.txt"
 #define f_max (unsigned short) 11
 #define r (unsigned int) 60 //period of the road
+#define d (unsigned int) 7
 
 
 void WriteMatrixToFile(FILE ** file, char * F){
@@ -77,6 +78,17 @@ int main(){
    char sep[] = "";
    InitialiseRoad(&road, 3, ' ', '.');
    PrintRoad(road, sep);
+
+   //Increment a pile
+   road.piles[d+1].f = road.piles[d+1].f+1;
+   road.piles[d+1].blocks[road.piles[d+1].f-1].filled = 1;
+   PrintRoad(road, sep);
+
+   //Decrement a pile
+   road.piles[d+1].f = road.piles[d+1].f-1;
+   road.piles[d+1].blocks[road.piles[d+1].f].filled = 0;
+   PrintRoad(road, sep);
+
 
 
 
