@@ -24,7 +24,8 @@ typedef struct {
 	unsigned int diameter; // road length 'r'	
 	int x0, xf;
 	unsigned short elevation; //current road height where the wheel is situated (elevation)
-	_Bool in_road;	
+	_Bool in_road;
+	int jumps;	
 } WHEEL;
 
 
