@@ -23,10 +23,14 @@
      _a < _b ? _a : _b; })
 
 
-void WriteMatrixToFile(FILE ** file, char * F){
+void WriteMatrixToFile(FILE ** file, ROAD road){
 	*file = fopen(F_filename, "a");
 	if (*file == NULL){printf("Error changing to append 'a' file!\n");exit(1);	}
-	fprintf(*file, "Some text: %s\n", F);   
+	for(int i = 0;i < road.length;i++){		 
+		if(i<road.length-1){fprintf(*file, "%u,", road.piles[i].f);}
+		else{fprintf(*file, "%u\n", road.piles[i].f);}
+	}
+	//printf("\n\n"); 
     fclose(*file);
 }
 
@@ -122,9 +126,9 @@ void IncrPiles(ROAD * road, int xmin, int xmax, int width){
 int main(){
 
 	//Create, initialise file
-	/*FILE *f = fopen(F_filename, "w");
+	FILE *f = fopen(F_filename, "w");
 	if (f == NULL){printf("Error opening file!\n");exit(1);	}
-*/
+
 	//Initialise the ROAD	
    ROAD road;
    char sep[] = "";
@@ -169,7 +173,7 @@ int main(){
   
 
 
-
+   WriteMatrixToFile(&f,road);
    
 
 
