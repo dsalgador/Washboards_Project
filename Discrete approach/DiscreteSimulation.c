@@ -115,8 +115,9 @@ void DecrPiles(ROAD * road, int xmin, int xmax, int width){
 }
 
 void IncrPiles(ROAD * road, int xmin, int xmax, int width){
-	if(xmin < 0 || xmax <0){printf("\n IncrPiles: negative xmin or xmax"); exit(2);}
-	for(int xpos = xmin; xpos <= xmax;xpos++){
+	//if(xmin < 0 || xmax <0){printf("\n IncrPiles: negative xmin or xmax"); exit(2);}
+	for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
+		if(xpos <0 | xpos > (*road).length){printf("\n IncrPiles: negative xpos or greather than road length"); exit(2);}
 		IncrPile(road, xpos, width);
 	}
 }
