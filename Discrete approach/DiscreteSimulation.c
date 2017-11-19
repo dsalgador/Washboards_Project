@@ -24,32 +24,32 @@
 
 
 void WriteMatrixToFile(FILE ** file, ROAD road){
-	*file = fopen(F_filename, "a");
-	if (*file == NULL){printf("Error changing to append 'a' file!\n");exit(1);	}
-	for(int i = 0;i < road.length;i++){		 
-		if(i<road.length-1){fprintf(*file, "%u,", road.piles[i].f);}
-		else{fprintf(*file, "%u\n", road.piles[i].f);}
-	}
-	//printf("\n\n"); 
+  *file = fopen(F_filename, "a");
+  if (*file == NULL){printf("Error changing to append 'a' file!\n");exit(1);  }
+  for(int i = 0;i < road.length;i++){    
+    if(i<road.length-1){fprintf(*file, "%u,", road.piles[i].f);}
+    else{fprintf(*file, "%u\n", road.piles[i].f);}
+  }
+  //printf("\n\n"); 
     fclose(*file);
 }
 
 void PrintRoad(ROAD road, char * sep){
-	char simbol;
-	printf("\n");
-	for(int j = (int) (f_max-1); j >=0; j--){
-    	for(int i = 0; i <road.length;i++){  
+  char simbol;
+  printf("\n");
+  for(int j = (int) (f_max-1); j >=0; j--){
+      for(int i = 0; i <road.length;i++){  
             if(road.piles[i].blocks[j].filled){
-            	simbol = road.simbol_filled;
+              simbol = road.simbol_filled;
             }
             else{simbol = road.simbol_empty;}
-    	    printf(sep);	
-    		printf("%c",simbol);
+          printf(sep);  
+        printf("%c",simbol);
 
 
-    	}
-    	printf(sep);
-    	printf("\n");
+      }
+      printf(sep);
+      printf("\n");
     }
     if(strcmp(sep, "") != 0){ 
          for(int k = 0; k < road.length;k++){printf("##");}
@@ -58,39 +58,39 @@ void PrintRoad(ROAD road, char * sep){
 }
 
 void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, char simbol_filled){
-	(*F).length = r;
-	(*F).simbol_empty = simbol_empty;
-	(*F).simbol_filled = simbol_filled;
+  (*F).length = r;
+  (*F).simbol_empty = simbol_empty;
+  (*F).simbol_filled = simbol_filled;
 
 
-	//printf("%d", F.length);
-	(*F).piles = (PILE *) malloc( ((int) (*F).length)*sizeof(PILE) );
-	for(int i = 0; i<r;i++){
-		//F.piles[i] = malloc(sizeof(PILE));
+  //printf("%d", F.length);
+  (*F).piles = (PILE *) malloc( ((int) (*F).length)*sizeof(PILE) );
+  for(int i = 0; i<r;i++){
+    //F.piles[i] = malloc(sizeof(PILE));
         (*F).piles[i].height = f_max;
         (*F).piles[i].f = initial_height;
         //printf("%d", F.piles[i].length);
         (*F).piles[i].blocks = (BLOCK *) malloc( ((int) (*F).piles[i].height)*sizeof(BLOCK));
         for(int j = 0; j< (int) (*F).piles[i].f;j++){
-        	(*F).piles[i].blocks[j].filled = 1;
-        	//(*F).piles[i].blocks[j].simbol = simbol_filled;
+          (*F).piles[i].blocks[j].filled = 1;
+          //(*F).piles[i].blocks[j].simbol = simbol_filled;
 
         }
         for(int k = (int) (*F).piles[i].f; k < (int) (*F).piles[i].height;k++){
-        	(*F).piles[i].blocks[k].filled = 0;
-        	//(*F).piles[i].blocks[k].simbol = simbol_empty;
+          (*F).piles[i].blocks[k].filled = 0;
+          //(*F).piles[i].blocks[k].simbol = simbol_empty;
         }
     }
 }
 
 void DecrPile(ROAD * road, int xpos, int width){
-	int width2 = min(width, max((*road).piles[xpos].f - width , (*road).piles[xpos].f ));
-	///if(  ((*road).piles[xpos].f - width) <0 ){width2 = }
+  int width2 = min(width, max((*road).piles[xpos].f - width , (*road).piles[xpos].f ));
+  ///if(  ((*road).piles[xpos].f - width) <0 ){width2 = }
     width = width2;
-	(*road).piles[xpos].f = (*road).piles[xpos].f-width;
-	for(int i = 0; i < width;i++){
-   		(*road).piles[xpos].blocks[(*road).piles[xpos].f+i].filled = 0;
-   	}
+  (*road).piles[xpos].f = (*road).piles[xpos].f-width;
+  for(int i = 0; i < width;i++){
+      (*road).piles[xpos].blocks[(*road).piles[xpos].f+i].filled = 0;
+    }
    
 
 }
@@ -99,93 +99,89 @@ void IncrPile(ROAD * road, int xpos, int width){
     int width2 = min(width, f_max - (*road).piles[xpos].f); //check better?
     width = width2;
 
-	(*road).piles[xpos].f = (*road).piles[xpos].f+width;
-	
-	   	//(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
-   	for(int i = 0; i < width;i++){
-   		(*road).piles[xpos].blocks[(*road).piles[xpos].f-i-1].filled = 1;
-   	}
+  (*road).piles[xpos].f = (*road).piles[xpos].f+width;
+  
+      //(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
+    for(int i = 0; i < width;i++){
+      (*road).piles[xpos].blocks[(*road).piles[xpos].f-i-1].filled = 1;
+    }
 }
 
 void DecrPiles(ROAD * road, int xmin, int xmax, int width){
-	//if(xmin < 0 || xmax <0){printf("\n DecrPiles: negative xmin or xmax"); exit(2);}
-	if( !((xmin <0 & xmax <0) | (xmin > (*road).length & xmax > (*road).length)) ){
-		for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
-			if(xpos <0 | xpos > (*road).length){printf("\n DecrPiles: negative xpos or greather than road length"); exit(2);}
-			DecrPile(road, xpos, width);
-		}
+  //if(xmin < 0 || xmax <0){printf("\n DecrPiles: negative xmin or xmax"); exit(2);}
+  if( !((xmin <0 & xmax <0) | (xmin > (*road).length & xmax > (*road).length)) ){
+    for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
+      if(xpos <0 | xpos > (*road).length){printf("\n DecrPiles: negative xpos or greather than road length"); exit(2);}
+      DecrPile(road, xpos, width);
+    }
    }
 }
 
 void IncrPiles(ROAD * road, int xmin, int xmax, int width){
-	//if(xmin < 0 || xmax <0){printf("\n IncrPiles: negative xmin or xmax"); exit(2);}
-	
+  //if(xmin < 0 || xmax <0){printf("\n IncrPiles: negative xmin or xmax"); exit(2);}
+  
     if( !((xmin <0 & xmax <0) | (xmin > (*road).length & xmax > (*road).length)) ){
-		for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
-			if(xpos <0 | xpos > (*road).length){printf("\n IncrPiles: negative xpos or greather than road length"); exit(2);}
-			IncrPile(road, xpos, width);
-		}
+    for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
+      if(xpos <0 | xpos > (*road).length){printf("\n IncrPiles: negative xpos or greather than road length"); exit(2);}
+      IncrPile(road, xpos, width);
+    }
   }
 }
 
 int MoveToNextBump(ROAD road, WHEEL * wheel){
-	   unsigned short poscount = (*wheel).xf;
-	   while(poscount < road.length &  road.piles[poscount].f <= (*wheel).elevation) poscount++;
-	   
-	   //Now poscount have the position where the bump starts, i.e. x0+1
-	   //printf("\nposcount: %d\n", poscount);
-	   (*wheel).xf = poscount-1;
-	   (*wheel).x0 = (*wheel).xf - (*wheel).diameter+1;
-	   return poscount;
+     unsigned short poscount = (*wheel).xf;
+     while(poscount < road.length &  road.piles[poscount].f <= (*wheel).elevation) poscount++;
+     
+     //Now poscount have the position where the bump starts, i.e. x0+1
+     //printf("\nposcount: %d\n", poscount);
+     (*wheel).xf = poscount-1;
+     (*wheel).x0 = (*wheel).xf - (*wheel).diameter+1;
+     return poscount;
    }
 
+int CurrentBumpHeight(ROAD road, WHEEL wheel){
+     unsigned short h_index;
+     for(int  i = 1; i<= wheel.diameter; i++){
+         if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
+          {h_index=i;                 
+                 }
+     }
+     h_index += wheel.xf;
+     printf("\n h_index = %d\n ", h_index);
 
-int CurrentBumpHeight(ROAD road, WHEEL * wheel){
- 	   unsigned short h_index;
-	   for(int  i = 1; i<= (*wheel).diameter; i++){
-	   	   if(road.piles[(*wheel).xf +i].f > (*wheel).elevation & road.piles[(*wheel).xf +i].f > road.piles[(*wheel).xf + h_index].f )
-	   	   	{h_index=i;   	      	   	
-	   	      	   }
-	   }
-	   h_index +=(*wheel).xf;
-	   printf("\n h_index = %d\n ", h_index);
-	   //Move the weel xf to the point h_index
-	   (*wheel).xf = h_index;
-	   (*wheel).x0 = h_index - (*wheel).diameter +1;
+     int h = road.piles[h_index].f - wheel.elevation;
+     if(h < 0){
+      printf("\nNegative Bump width\n");
+      exit(-1);
+     }
 
-	   int h = road.piles[h_index].f - (*wheel).elevation;
-	   if(h < 0){
-	   	printf("\nNegative Bump width\n");
-	   	exit(-1);
-	   }
-
-	   return h;
+     return h;
  }
 
 void PrintRoadWheelInfo(ROAD road, WHEEL wheel){
-	printf("\n wheel.xf =  %d \n", wheel.xf );
-	printf(" wheel.x0 = %d  \n", wheel.x0);
-	printf(" wheel elevation = %d  \n", wheel.elevation);
-	printf(" f(wheel.xf) = %d   \n", road.piles[wheel.xf].f );
-	printf(" f(wheel.x0) = %d    \n", road.piles[wheel.x0].f);
+  printf("\n wheel.xf =  %d \n", wheel.xf );
+  printf(" wheel.x0 = %d  \n", wheel.x0);
+  printf(" wheel elevation = %d  \n", wheel.elevation);
+  printf(" f(wheel.xf) = %d   \n", road.piles[wheel.xf].f );
+  printf(" f(wheel.x0) = %d    \n", road.piles[wheel.x0].f);
 }
 
 
 int L_jump(int Beta, int bump_height){
-	//Jump length
-	int L= beta*bump_height;
-	return L;
+  //Jump length
+  int L= beta*bump_height;
+  return L;
 }
 
 
 int main(){
 
-	//Create, initialise file
-	FILE *f = fopen(F_filename, "w");
-	if (f == NULL){printf("Error opening file!\n");exit(1);	}
+  //Create, initialise file
+  FILE *f = fopen(F_filename, "w");
+  if (f == NULL){printf("Error opening file!\n");exit(1); }
 
     
-	//Initialise the ROAD	
+  //Initialise the ROAD 
    ROAD road;
    char sep[] = "";
    InitialiseRoad(&road, 3, ' ', '.');
@@ -234,12 +230,12 @@ int main(){
    WriteMatrixToFile(&f,road);
 
   
-	  
-	  
+    
+    
    //search the first bump that the wheel is going to find and update the wheel positions
    unsigned short poscount = MoveToNextBump(road, &wheel);
    //calculate h  
-   unsigned int h = CurrentBumpHeight(road, &wheel);
+   unsigned int h = CurrentBumpHeight(road, wheel);
    printf("h: %d", h);
    PrintRoadWheelInfo(road, wheel);
 
@@ -248,16 +244,16 @@ int main(){
 
 
 
-	/* print some text to the file*/
+  /* print some text to the file*/
 
-	/*char *text = "Write this to the file";
-	WriteMatrixToFile(&f, text);
-	WriteMatrixToFile(&f, text);*/
-	
+  /*char *text = "Write this to the file";
+  WriteMatrixToFile(&f, text);
+  WriteMatrixToFile(&f, text);*/
+  
 
-	
+  
 
-	return 0;
+  return 0;
 }
 
 /*
