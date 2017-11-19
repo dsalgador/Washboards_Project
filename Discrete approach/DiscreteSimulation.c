@@ -117,10 +117,13 @@ void DecrPiles(ROAD * road, int xmin, int xmax, int width){
 
 void IncrPiles(ROAD * road, int xmin, int xmax, int width){
 	//if(xmin < 0 || xmax <0){printf("\n IncrPiles: negative xmin or xmax"); exit(2);}
-	for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
-		if(xpos <0 | xpos > (*road).length){printf("\n IncrPiles: negative xpos or greather than road length"); exit(2);}
-		IncrPile(road, xpos, width);
-	}
+	
+    if( !((xmin <0 & xmax <0) | (xmin > (*road).length & xmin > (*road).length)) ){
+		for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
+			if(xpos <0 | xpos > (*road).length){printf("\n IncrPiles: negative xpos or greather than road length"); exit(2);}
+			IncrPile(road, xpos, width);
+		}
+  }
 }
 
 int MoveToNextBump(ROAD road, WHEEL * wheel){
@@ -134,7 +137,7 @@ int MoveToNextBump(ROAD road, WHEEL * wheel){
 	   return poscount;
    }
 
- int CurrentBumpHeight(ROAD road, WHEEL wheel){
+int CurrentBumpHeight(ROAD road, WHEEL wheel){
  	   unsigned short h_index;
 	   for(int  i = 1; i<= wheel.diameter; i++){
 	   	   if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
@@ -161,12 +164,21 @@ void PrintRoadWheelInfo(ROAD road, WHEEL wheel){
 	printf(" f(wheel.x0) = %d    \n", road.piles[wheel.x0].f);
 }
 
+
+int L_jump(int Beta, int bump_height){
+	//Jump length
+	int L= beta*bump_height;
+	return L;
+}
+
+
 int main(){
 
 	//Create, initialise file
 	FILE *f = fopen(F_filename, "w");
 	if (f == NULL){printf("Error opening file!\n");exit(1);	}
 
+    
 	//Initialise the ROAD	
    ROAD road;
    char sep[] = "";
@@ -183,13 +195,14 @@ int main(){
    WHEEL wheel;
    wheel.diameter = d;
    wheel.xf = 0;
-   wheel.x0 = 0-wheel.diameter;
+   wheel.x0 = 0-wheel.diameter+1;
    wheel.elevation = road.piles[wheel.xf+1].f;
    //printf("%i", wheel.elevation);
    PrintRoadWheelInfo(road, wheel);
 
    //int L = 2*wheel.diameter;
-   int L = (int) (beta * road.piles[wheel.xf].f);
+   int L = L_jump(beta, (road.piles[wheel.xf].f-wheel.elevation) );
+   //(int) (beta * road.piles[wheel.xf].f);
    printf("%d", L);
     //Jump
    wheel.xf += L;
@@ -205,9 +218,11 @@ int main(){
    PrintRoad(road, sep);
 
    wheel.elevation = road.piles[wheel.xf+1].f;
-   printf("\nwheel elevation: %i \n", wheel.elevation);
-   
+   //printf("\nwheel elevation: %i \n", wheel.elevation);   
    L = (int) (beta * road.piles[wheel.xf-1].f);  
+
+   PrintRoadWheelInfo(road, wheel);
+
 
 
    WriteMatrixToFile(&f,road);
@@ -220,6 +235,8 @@ int main(){
    //calculate h  
    unsigned int h = CurrentBumpHeight(road, wheel);
    printf("h: %d", h);
+   PrintRoadWheelInfo(road, wheel);
+
 
 
 
