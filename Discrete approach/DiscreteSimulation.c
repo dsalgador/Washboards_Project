@@ -121,6 +121,35 @@ void IncrPiles(ROAD * road, int xmin, int xmax, int width){
 	}
 }
 
+int MoveToNextBump(ROAD road, WHEEL * wheel){
+	   unsigned short poscount = (*wheel).xf;
+	   while(poscount < road.length &  road.piles[poscount].f <= (*wheel).elevation) poscount++;
+	   
+	   //Now poscount have the position where the bump starts, i.e. x0+1
+	   //printf("\nposcount: %d\n", poscount);
+	   (*wheel).xf = poscount;
+	   (*wheel).x0 = (*wheel).xf - (*wheel).diameter;
+	   return poscount;
+   }
+
+ int CurrentBumpHeight(ROAD road, WHEEL wheel){
+ 	   unsigned short h_index;
+	   for(int  i = 1; i<= wheel.diameter; i++){
+	   	   if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
+	   	   	{h_index=i;   	      	   	
+	   	      	   }
+	   }
+	   h_index += wheel.xf;
+	   printf("\n h_index = %d\n ", h_index);
+
+	   int h = road.piles[h_index].f - wheel.elevation;
+	   if(h < 0){
+	   	printf("\nNegative Bump width\n");
+	   	exit(-1);
+	   }
+
+	   return h;
+ }
 
 
 int main(){
@@ -171,28 +200,14 @@ int main(){
 
 
    WriteMatrixToFile(&f,road);
+
+  
+	  
+	  
    //search the first bump that the wheel is going to find and update the wheel positions
-   unsigned short poscount = wheel.xf;
-   while(poscount < road.length &  road.piles[poscount].f <= wheel.elevation){
-   	poscount++;
-   }
-   //Now poscount have the position where the bump starts, i.e. x0+1
-   printf("\nposcount: %d\n", poscount);
-
-   wheel.xf = poscount;
-   wheel.x0 = wheel.xf - wheel.diameter;
-
-   //calculate h
-   unsigned short h_index;
-   for(int  i = 1; i<= wheel.diameter; i++){
-   	   if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
-   	   	{h_index=i;   	      	   	
-   	      	   }
-   }
-   h_index += wheel.xf;
-   printf("\n h_index = %d\n ", h_index);
-
-   unsigned int h = road.piles[h_index].f - wheel.elevation;
+   unsigned short poscount = MoveToNextBump(road, &wheel);
+   //calculate h  
+   unsigned int h = CurrentBumpHeight(road, wheel);
    printf("h: %d", h);
 
 
