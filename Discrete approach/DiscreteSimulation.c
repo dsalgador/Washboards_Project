@@ -165,7 +165,7 @@ int main(){
    PrintRoad(road, sep);
 
    wheel.elevation = road.piles[wheel.xf+1].f;
-   printf("%i", wheel.elevation);
+   printf("\nwheel elevation: %i \n", wheel.elevation);
    
    L = (int) (beta * road.piles[wheel.xf-1].f);  
 
@@ -179,11 +179,20 @@ int main(){
    //Now poscount have the position where the bump starts, i.e. x0+1
    printf("\nposcount: %d\n", poscount);
 
+   wheel.xf = poscount;
+   wheel.x0 = wheel.xf - wheel.diameter;
+
    //calculate h
-   unsigned short h =0;
+   unsigned short h_index;
    for(int  i = 1; i<= wheel.diameter; i++){
-   	   if(road.piles[wheel.xf +i].f >h){h=road.piles[wheel.xf +i].f;}
+   	   if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
+   	   	{h_index=i;   	      	   	
+   	      	   }
    }
+   h_index += wheel.xf;
+   printf("\n h_index = %d\n ", h_index);
+
+   unsigned int h = road.piles[h_index].f - wheel.elevation;
    printf("h: %d", h);
 
 
