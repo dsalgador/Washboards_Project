@@ -139,17 +139,21 @@ int MoveToNextBump(ROAD road, WHEEL * wheel){
 	   return poscount;
    }
 
-int CurrentBumpHeight(ROAD road, WHEEL wheel){
+
+int CurrentBumpHeight(ROAD road, WHEEL * wheel){
  	   unsigned short h_index;
-	   for(int  i = 1; i<= wheel.diameter; i++){
-	   	   if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
+	   for(int  i = 1; i<= (*wheel).diameter; i++){
+	   	   if(road.piles[(*wheel).xf +i].f > (*wheel).elevation & road.piles[(*wheel).xf +i].f > road.piles[(*wheel).xf + h_index].f )
 	   	   	{h_index=i;   	      	   	
 	   	      	   }
 	   }
-	   h_index += wheel.xf;
+	   h_index +=(*wheel).xf;
 	   printf("\n h_index = %d\n ", h_index);
+	   //Move the weel xf to the point h_index
+	   (*wheel).xf = h_index;
+	   (*wheel).x0 = h_index - (*wheel).diameter +1;
 
-	   int h = road.piles[h_index].f - wheel.elevation;
+	   int h = road.piles[h_index].f - (*wheel).elevation;
 	   if(h < 0){
 	   	printf("\nNegative Bump width\n");
 	   	exit(-1);
@@ -235,7 +239,7 @@ int main(){
    //search the first bump that the wheel is going to find and update the wheel positions
    unsigned short poscount = MoveToNextBump(road, &wheel);
    //calculate h  
-   unsigned int h = CurrentBumpHeight(road, wheel);
+   unsigned int h = CurrentBumpHeight(road, &wheel);
    printf("h: %d", h);
    PrintRoadWheelInfo(road, wheel);
 
