@@ -134,8 +134,8 @@ int MoveToNextBump(ROAD road, WHEEL * wheel){
 	   
 	   //Now poscount have the position where the bump starts, i.e. x0+1
 	   //printf("\nposcount: %d\n", poscount);
-	   (*wheel).xf = poscount;
-	   (*wheel).x0 = (*wheel).xf - (*wheel).diameter;
+	   (*wheel).xf = poscount-1;
+	   (*wheel).x0 = (*wheel).xf - (*wheel).diameter+1;
 	   return poscount;
    }
 
@@ -210,7 +210,7 @@ int main(){
    wheel.xf += L;
    wheel.x0 += L;
 
-
+   printf("Jump\n");
    PrintRoadWheelInfo(road, wheel);
 
 
