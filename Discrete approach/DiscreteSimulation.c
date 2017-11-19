@@ -173,6 +173,24 @@ int L_jump(int Beta, int bump_height){
   return L;
 }
 
+void JumpIteration(ROAD * road, WHEEL * wheel){
+  int L; 
+  if((*road).n == 1){
+     L = L_jump(beta, ( (*road).piles[(*wheel).xf].f-(*wheel).elevation) );   
+   }
+  else{ }
+  (*wheel).xf += L;
+  (*wheel).x0 += L;
+  IncrPiles(road, (*wheel).x0- (*wheel).diameter+1, (*wheel).xf - (*wheel).diameter, 1);
+     //PrintRoad(road, sep);
+  DecrPiles(road, (*wheel).x0+1, (*wheel).xf , 1);
+     //PrintRoad(road, sep);
+  (*wheel).elevation = (*road).piles[(*wheel).xf+1].f;
+
+  if(!(*wheel).in_road){(*road).n +=1; 
+                         (*road).occuped= 0 ;}
+
+}
 
 int main(){
 
@@ -193,12 +211,16 @@ int main(){
    PrintRoad(road, sep);
 
 
+
    //Initialise the WHEEL
    WHEEL wheel;
    wheel.diameter = d;
    wheel.xf = 0;
    wheel.x0 = 0-wheel.diameter+1;
    wheel.elevation = road.piles[wheel.xf+1].f;
+   wheel.in_road = 1;
+   road.n = 1;
+   road.occuped =1;
    //printf("%i", wheel.elevation);
    PrintRoadWheelInfo(road, wheel);
 
@@ -237,6 +259,18 @@ int main(){
    //calculate h  
    unsigned int h = CurrentBumpHeight(road, wheel);
    printf("h: %d", h);
+
+   //Now we are in the current jump and we have to jump:
+   L = L_jump(beta, h);
+   wheel.xf += L;
+   wheel.x0 += L;
+   IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 1);
+   PrintRoad(road, sep);
+   DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
+   PrintRoad(road, sep);
+   wheel.elevation = road.piles[wheel.xf+1].f;
+
+
    PrintRoadWheelInfo(road, wheel);
 
 
