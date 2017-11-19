@@ -151,6 +151,13 @@ int MoveToNextBump(ROAD road, WHEEL * wheel){
 	   return h;
  }
 
+void PrintRoadWheelInfo(ROAD road, WHEEL wheel){
+	printf("\n wheel.xf =  %d \n", wheel.xf );
+	printf(" wheel.x0 = %d  \n", wheel.x0);
+	printf(" wheel elevation = %d  \n", wheel.elevation);
+	printf(" f(wheel.xf) = %d   \n", road.piles[wheel.xf].f );
+	printf(" f(wheel.x0) = %d    \n", road.piles[wheel.x0].f);
+}
 
 int main(){
 
@@ -167,29 +174,31 @@ int main(){
    IncrPiles(&road, 24,28 ,1);
    IncrPile(&road, 25, 1);
    IncrPile(&road, 27, 2);
-
-
    PrintRoad(road, sep);
+
 
    //Initialise the WHEEL
    WHEEL wheel;
    wheel.diameter = d;
-   wheel.xf = 1;
-   wheel.x0 = 1-wheel.diameter;
+   wheel.xf = 0;
+   wheel.x0 = 0-wheel.diameter;
    wheel.elevation = road.piles[wheel.xf+1].f;
-   printf("%i", wheel.elevation);
+   //printf("%i", wheel.elevation);
+   PrintRoadWheelInfo(road, wheel);
 
    //int L = 2*wheel.diameter;
-   int L = (int) (beta * road.piles[wheel.xf-1].f);
+   int L = (int) (beta * road.piles[wheel.xf].f);
    printf("%d", L);
     //Jump
    wheel.xf += L;
    wheel.x0 += L;
-  
+
+
+   PrintRoadWheelInfo(road, wheel);
+
 
    IncrPiles(&road, wheel.x0- wheel.diameter+1, wheel.xf - wheel.diameter, 1);
    PrintRoad(road, sep);
-
    DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
    PrintRoad(road, sep);
 
