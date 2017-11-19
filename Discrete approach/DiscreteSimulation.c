@@ -167,14 +167,25 @@ int main(){
    wheel.elevation = road.piles[wheel.xf+1].f;
    printf("%i", wheel.elevation);
    
-   L = (int) (beta * road.piles[wheel.xf-1].f);
-
-
-  
+   L = (int) (beta * road.piles[wheel.xf-1].f);  
 
 
    WriteMatrixToFile(&f,road);
-   
+   //search the first bump that the wheel is going to find and update the wheel positions
+   unsigned short poscount = wheel.xf;
+   while(poscount < road.length &  road.piles[poscount].f <= wheel.elevation){
+   	poscount++;
+   }
+   //Now poscount have the position where the bump starts, i.e. x0+1
+   printf("\nposcount: %d\n", poscount);
+
+   //calculate h
+   unsigned short h =0;
+   for(int  i = 1; i<= wheel.diameter; i++){
+   	   if(road.piles[wheel.xf +i].f >h){h=road.piles[wheel.xf +i].f;}
+   }
+   printf("h: %d", h);
+
 
 
 
