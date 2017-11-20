@@ -8,9 +8,9 @@
 
 #define F_filename "F_matrix.txt"
 #define f_max (unsigned short) 11
-#define r (unsigned int) 60 //period of the road
-#define d (unsigned int) 7
-#define beta (unsigned int) 3
+#define r (unsigned int) 100 //period of the road 60
+#define d (unsigned int) 7 //7
+#define beta (unsigned int) 5 //3
 
  #define max(a,b) \
    ({ __typeof__ (a) _a = (a); \
@@ -160,9 +160,9 @@ int CurrentBumpHeight(ROAD road, WHEEL wheel){
                  }
      }
 
-     printf("\nAcabado el for para h_index \n");
+     //printf("\nAcabado el for para h_index \n");
      h_index += wheel.xf;
-     printf("\n h_index = %d\n ", h_index);
+     //printf("\n h_index = %d\n ", h_index);
 
      int h = road.piles[h_index].f - wheel.elevation;
      if(h < 0){
@@ -251,7 +251,7 @@ int Jump(ROAD * road, WHEEL * wheel){
    //search the first bump that the wheel is going to find and update the wheel positions
    char sep[] = "";
    unsigned short poscount = MoveToNextBump(*road, wheel);
-   printf("\nposcount: %d\n", poscount);
+   //printf("\nposcount: %d\n", poscount);
    if(poscount >= r){
     printf("\n No bumps found, the wheel is going to leave the road, poscount = %d\n", poscount);
     (*wheel).in_road = 0;
@@ -259,7 +259,7 @@ int Jump(ROAD * road, WHEEL * wheel){
    }
    //calculate h  
    unsigned int h = CurrentBumpHeight(*road, *wheel);
-   printf("h: %d", h);
+   //printf("h: %d", h);
    if(h != 0){
      int L;
      //Now we are in the current jump and we have to jump:
@@ -309,54 +309,70 @@ int main(){
    InitialiseRoad(&road, 3, ' ', '.');
 
    IncrPile(&road, 0, 1);
-   IncrPiles(&road, 24,28 ,1);
+
+   //NEW PROFILE
+   IncrPile(&road, 25, 1);
+   IncrPile(&road, 40, 1);
+   IncrPile(&road, 70, 1);
+
+   //OLD PROFILE
+   /*IncrPiles(&road, 24,28 ,1);
    IncrPile(&road, 25, 1);
    IncrPile(&road, 27, 2);
    IncrPiles(&road, 40, 42, 1);
    IncrPile(&road, 41, 1);
-   IncrPile(&road, 47, 1);
+   IncrPile(&road, 47, 1);*/
    PrintRoad(road, sep);
    
 
 
    //Initialise the WHEEL
    WHEEL wheel;
-   /*
-   wheel.diameter = d;
-   wheel.xf = 0;
-   wheel.x0 = 0-wheel.diameter+1;
-   wheel.elevation = road.piles[wheel.xf+1].f;
-   wheel.in_road = 1;
-   wheel.jumps = 0;
-   road.n = 1;
-   road.occuped =1;*/
+   InitialiseWheel(&road, &wheel, 0, 1);    
+   int L, nmax = 2;
+   /*int iter;   int itermax =  10;
+   
+   while(road.n < nmax)
+  {  
+   for(int j = 0; j <2;j++){
+    iter = 0;
+    //InitialiseWheel(&road, &wheel, 0, 1);
+    JumpIteration(&road, &wheel);
+    PrintRoad(road, sep);
+    while(wheel.in_road & iter <=itermax){
+     Jump(&road, &wheel);
+     iter++; 
+   }
+ }
+*/
+  //}
 
-   InitialiseWheel(&road, &wheel, 0, 1);
 
-
-   //printf("%i", wheel.elevation);
-   PrintRoadWheelInfo(road, wheel);
-   int L;
-   //Initial jump
    JumpIteration(&road, &wheel);
    //JumpIteration(&road, &wheel);
-   PrintRoadWheelInfo(road, wheel);
+   //PrintRoadWheelInfo(road, wheel);
    PrintRoad(road, sep);
-   /*Jump(&road, &wheel);
-  //PrintRoadWheelInfo(road, wheel);
 
-   Jump(&road, &wheel);
-   PrintRoadWheelInfo(road, wheel);
-   Jump(&road, &wheel);
-   PrintRoadWheelInfo(road, wheel);
-   Jump(&road, &wheel);
-   PrintRoadWheelInfo(road, wheel);*/
    int iter = 0;   int itermax =  10;
    while(wheel.in_road & iter <=itermax){
      Jump(&road, &wheel);
      iter++;
    }
-   InitialiseWheel(&road, &wheel, 0, 2);
+
+
+   InitialiseWheel(&road, &wheel, 3, 2);
+   PrintRoadWheelInfo(road, wheel);
+  JumpIteration(&road, &wheel);
+  PrintRoad(road, sep);
+
+   itermax = 3; iter = 0;
+   while(wheel.in_road & iter < itermax){
+     Jump(&road, &wheel);
+     iter++;
+   }
+   if(iter >= itermax){wheel.in_road = 0;};
+
+   InitialiseWheel(&road, &wheel, 5, 3);
    PrintRoadWheelInfo(road, wheel);
   JumpIteration(&road, &wheel);
   PrintRoad(road, sep);
