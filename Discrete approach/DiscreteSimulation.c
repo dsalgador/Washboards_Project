@@ -152,9 +152,9 @@ int MoveToNextBump(ROAD road, WHEEL * wheel){
 int CurrentBumpHeight(ROAD road, WHEEL wheel){
      int h_index = 0;
      for(int  i = 1; i<= wheel.diameter; i++){
-      printf("\nfor para h_index iter %d \n",i);      
-      PrintRoadWheelInfo(road, wheel);
-      printf("road piles ...: %d\n", road.piles[wheel.xf +i].f );
+      //printf("\nfor para h_index iter %d \n",i);      
+      //PrintRoadWheelInfo(road, wheel);
+      //printf("road piles ...: %d\n", road.piles[wheel.xf +i].f );
          if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
           {h_index=i;                 
                  }
@@ -282,6 +282,19 @@ int Jump(ROAD * road, WHEEL * wheel){
 
 }
 
+void InitialiseWheel(ROAD * road, WHEEL * wheel, int xf, int n){
+   (*wheel).diameter = d;
+   (*wheel).xf = xf;
+   (*wheel).x0 = xf-(*wheel).diameter+1;
+   (*wheel).elevation = (*road).piles[(*wheel).xf+1].f;
+   (*wheel).in_road = 1;
+   (*wheel).jumps = 0;
+   (*road).n = n;
+   (*road).occuped =1;
+
+
+}
+
 
 int main(){
 
@@ -302,13 +315,13 @@ int main(){
    IncrPiles(&road, 40, 42, 1);
    IncrPile(&road, 41, 1);
    IncrPile(&road, 47, 1);
-
    PrintRoad(road, sep);
    
 
 
    //Initialise the WHEEL
    WHEEL wheel;
+   /*
    wheel.diameter = d;
    wheel.xf = 0;
    wheel.x0 = 0-wheel.diameter+1;
@@ -316,7 +329,11 @@ int main(){
    wheel.in_road = 1;
    wheel.jumps = 0;
    road.n = 1;
-   road.occuped =1;
+   road.occuped =1;*/
+
+   InitialiseWheel(&road, &wheel, 0, 1);
+
+
    //printf("%i", wheel.elevation);
    PrintRoadWheelInfo(road, wheel);
    int L;
@@ -325,7 +342,7 @@ int main(){
    //JumpIteration(&road, &wheel);
    PrintRoadWheelInfo(road, wheel);
    PrintRoad(road, sep);
-   Jump(&road, &wheel);
+   /*Jump(&road, &wheel);
   //PrintRoadWheelInfo(road, wheel);
 
    Jump(&road, &wheel);
@@ -333,8 +350,23 @@ int main(){
    Jump(&road, &wheel);
    PrintRoadWheelInfo(road, wheel);
    Jump(&road, &wheel);
+   PrintRoadWheelInfo(road, wheel);*/
+   int iter = 0;   int itermax =  10;
+   while(wheel.in_road & iter <=itermax){
+     Jump(&road, &wheel);
+     iter++;
+   }
+   InitialiseWheel(&road, &wheel, 0, 2);
    PrintRoadWheelInfo(road, wheel);
+  JumpIteration(&road, &wheel);
+  PrintRoad(road, sep);
 
+   itermax = 3; iter = 0;
+   while(wheel.in_road & iter < itermax){
+     Jump(&road, &wheel);
+     iter++;
+   }
+   if(iter >= itermax){wheel.in_road = 0;};
 
 
   
