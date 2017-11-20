@@ -109,8 +109,8 @@ void DecrPile(ROAD * road, int xpos, int width){
 void IncrPile(ROAD * road, int xpos, int width){
     int width2 = min(width, f_max - ((*road).piles[xpos].f +0) ); //check better?
     width = width2;
-    if(xpos == 0){
-      printf("\nwidth incr: %d\n", width);}
+    /*if(xpos == 0){
+      printf("\nwidth incr: %d\n", width);}*/
 
     if(width != 0){
         (*road).piles[xpos].f = (*road).piles[xpos].f+width;
@@ -167,8 +167,8 @@ int CurrentBumpHeight(ROAD road, WHEEL wheel){
           {h_index=i;                 
                  }
      }
-    printf("\n wheel.xf= %d\n ", wheel.xf);
-    printf("\n wheel.elevation= %d\n ", wheel.elevation);
+    //printf("\n wheel.xf= %d\n ", wheel.xf);
+    //printf("\n wheel.elevation= %d\n ", wheel.elevation);
 
 
      //printf("\nAcabado el for para h_index \n");
@@ -180,7 +180,7 @@ int CurrentBumpHeight(ROAD road, WHEEL wheel){
        return -1;
      }
 
-     printf("\n h_index = %d\n ", h_index);
+     //printf("\n h_index = %d\n ", h_index);
 
      int h = road.piles[h_index].f - wheel.elevation;
      if(h < 0){
@@ -270,7 +270,7 @@ int Jump(ROAD * road, WHEEL * wheel){
    char sep[] = "";
    unsigned short poscount = MoveToNextBump(*road, wheel);
 
-   printf("\nposcount: %d\n", poscount);
+   //printf("\nposcount: %d\n", poscount);
    if(poscount >= r){
     printf("\n No bumps found, the wheel is going to leave the road, poscount = %d\n", poscount);
     (*wheel).in_road = 0;
@@ -301,7 +301,7 @@ int Jump(ROAD * road, WHEEL * wheel){
     printf("\nh is equal to zero, no bumps found\n"); exit(0);
 
   }
-  printf("h: %d", h);
+  //printf("h: %d", h);
 
   return 0;
 
@@ -425,24 +425,29 @@ int main(){
    }*/
 
 
-   int x0rand, wmax = 26;
+   int x0rand, wmax = 208;
    itermax = 10;
   for(int w = 1; w <=wmax;w++){
      printf("%d\n",w);
-     if(w == 26){ PrintRoadWheelInfo(road, wheel);}
+     PrintRoadWheelInfo(road, wheel);
+     PrintRoad(road, sep);
+
      x0rand = (rand() % 9) +1;
+     printf("\n x0rand %d \n", x0rand);
      InitialiseWheel(&road, &wheel, x0rand, w+1);
-      if(w == 26){ PrintRoadWheelInfo(road, wheel);}
+     if(wheel.xf == 99){printf("iter %d  %d\n", w, wheel.xf);}
+      //if(w == 26){ PrintRoadWheelInfo(road, wheel);}
      //PrintRoadWheelInfo(road, wheel);
-     if(w == 26){ PrintRoad(road, sep);}
+     //if(w == 26){ PrintRoad(road, sep);}
      JumpIteration(&road, &wheel);
-     if(w == 26){ PrintRoadWheelInfo(road, wheel);
-     printf("???????????");
-     PrintRoad(road, sep);}
+     //if(w == 26){ PrintRoadWheelInfo(road, wheel);
+     //printf("???????????");
+     //PrintRoad(road, sep);
+   //}
 
      iter = 0;
      while(wheel.in_road & iter < itermax){
-       printf("\n jump number = %d\n", wheel.jumps);
+       //printf("\n jump number = %d\n", wheel.jumps);
        Jump(&road, &wheel); //ERROR EN EL PRIMER JUMP
        iter++;
      }
