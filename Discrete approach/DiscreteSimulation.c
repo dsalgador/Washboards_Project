@@ -111,14 +111,16 @@ void IncrPile(ROAD * road, int xpos, int width){
     width = width2;
     if(xpos == 0){
       printf("\nwidth incr: %d\n", width);}
-    
 
-    (*road).piles[xpos].f = (*road).piles[xpos].f+width;
-  
-      //(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
-    for(int i = 0; i < width;i++){
-      (*road).piles[xpos].blocks[(*road).piles[xpos].f-i-1].filled = 1;
-    }
+    if(width != 0){
+        (*road).piles[xpos].f = (*road).piles[xpos].f+width;
+      
+          //(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
+        for(int i = 0; i < width;i++){
+          (*road).piles[xpos].blocks[(*road).piles[xpos].f-i-1].filled = 1;
+        }
+  }
+  else{  printf("Width == 0, no increase considered in pos %d", xpos);}
 }
 
 void DecrPiles(ROAD * road, int xmin, int xmax, int width){
@@ -165,10 +167,20 @@ int CurrentBumpHeight(ROAD road, WHEEL wheel){
           {h_index=i;                 
                  }
      }
+    printf("\n wheel.xf= %d\n ", wheel.xf);
+    printf("\n wheel.elevation= %d\n ", wheel.elevation);
+
 
      //printf("\nAcabado el for para h_index \n");
+     //Index where we situate the wheel, just before the next bump if there is
      h_index += wheel.xf;
-     //printf("\n h_index = %d\n ", h_index);
+     //if there is no next bump, h_index will overpass the length of the road
+     if(h_index >= road.length){
+       printf("\nNo more bumps, h_index exceded the range [0,%d]\n", road.length);
+       return -1;
+     }
+
+     printf("\n h_index = %d\n ", h_index);
 
      int h = road.piles[h_index].f - wheel.elevation;
      if(h < 0){
@@ -257,16 +269,21 @@ int Jump(ROAD * road, WHEEL * wheel){
    //search the first bump that the wheel is going to find and update the wheel positions
    char sep[] = "";
    unsigned short poscount = MoveToNextBump(*road, wheel);
-   //printf("\nposcount: %d\n", poscount);
+
+   printf("\nposcount: %d\n", poscount);
    if(poscount >= r){
-    //printf("\n No bumps found, the wheel is going to leave the road, poscount = %d\n", poscount);
+    printf("\n No bumps found, the wheel is going to leave the road, poscount = %d\n", poscount);
     (*wheel).in_road = 0;
     return -1;
    }
    //calculate h  
-   unsigned int h = CurrentBumpHeight(*road, *wheel);
-   //printf("h: %d", h);
-   if(h != 0){
+   //unsigned int h = CurrentBumpHeight(*road, *wheel);
+   int h;
+   if( (h = CurrentBumpHeight(*road, *wheel)) == -1){ (*wheel).in_road = 0;
+    printf("\n h = -1 returned. h_index exceded road range\n");
+   }  
+
+   else if(h != 0){
      int L;
      //Now we are in the current jump and we have to jump:
      L = L_jump(beta, h);
@@ -278,11 +295,13 @@ int Jump(ROAD * road, WHEEL * wheel){
      //PrintRoad(*road, sep);
      (*wheel).elevation = (*road).piles[(*wheel).xf+1].f;
      //printf("L = %d\n", L);
+     (*wheel).jumps += 1;
  }
   else{
     printf("\nh is equal to zero, no bumps found\n"); exit(0);
 
   }
+  printf("h: %d", h);
 
   return 0;
 
@@ -410,23 +429,29 @@ int main(){
    itermax = 10;
   for(int w = 1; w <=wmax;w++){
      printf("%d\n",w);
+     if(w == 26){ PrintRoadWheelInfo(road, wheel);}
      x0rand = (rand() % 9) +1;
      InitialiseWheel(&road, &wheel, x0rand, w+1);
+      if(w == 26){ PrintRoadWheelInfo(road, wheel);}
      //PrintRoadWheelInfo(road, wheel);
+     if(w == 26){ PrintRoad(road, sep);}
      JumpIteration(&road, &wheel);
-     //PrintRoad(road, sep);
+     if(w == 26){ PrintRoadWheelInfo(road, wheel);
+     printf("???????????");
+     PrintRoad(road, sep);}
 
      iter = 0;
      while(wheel.in_road & iter < itermax){
-       Jump(&road, &wheel);
+       printf("\n jump number = %d\n", wheel.jumps);
+       Jump(&road, &wheel); //ERROR EN EL PRIMER JUMP
        iter++;
      }
      if(iter >= itermax){wheel.in_road = 0;};
-     PrintRoad(road, sep);
+     //PrintRoad(road, sep);
 }
 
   
-//PrintRoad(road, sep);
+PrintRoad(road, sep);
 
 /*
    //int L = 2*wheel.diameter;
@@ -491,6 +516,7 @@ int main(){
    */
 
    PrintRoadWheelInfo(road, wheel);
+   PrintRoad(road, sep);
 
 
 
