@@ -217,13 +217,13 @@ void JumpIteration(ROAD * road, WHEEL * wheel){
     L = 5;
    }
   else{
-    printf("\nHe entrat al else the JumpIteration\n");
+    //printf("\nHe entrat al else the JumpIteration\n");
     poscount = MoveToNextBump(*road, wheel);
-    printf("poscount: %d", poscount);
+    //printf("poscount: %d", poscount);
 
    //calculate h  
     h = CurrentBumpHeight(*road, *wheel);
-    printf("h: %d", h);
+    //printf("h: %d", h);
 
 
    //Now we are in the current jump and we have to jump:
@@ -244,7 +244,7 @@ void JumpIteration(ROAD * road, WHEEL * wheel){
 
 
   (*wheel).jumps +=1;
-  printf("L = %d\n", L);
+  //printf("L = %d\n", L);
 
 }
 
@@ -254,7 +254,7 @@ int Jump(ROAD * road, WHEEL * wheel){
    unsigned short poscount = MoveToNextBump(*road, wheel);
    //printf("\nposcount: %d\n", poscount);
    if(poscount >= r){
-    printf("\n No bumps found, the wheel is going to leave the road, poscount = %d\n", poscount);
+    //printf("\n No bumps found, the wheel is going to leave the road, poscount = %d\n", poscount);
     (*wheel).in_road = 0;
     return -1;
    }
@@ -268,11 +268,11 @@ int Jump(ROAD * road, WHEEL * wheel){
      (*wheel).xf += L;
      (*wheel).x0 += L;
      IncrPiles(road, (*wheel).x0- (*wheel).diameter+1, (*wheel).xf - (*wheel).diameter, 1);
-     PrintRoad(*road, sep);
+     //PrintRoad(*road, sep);
      DecrPiles(road, (*wheel).x0+1, (*wheel).xf , 1);
-     PrintRoad(*road, sep);
+     //PrintRoad(*road, sep);
      (*wheel).elevation = (*road).piles[(*wheel).xf+1].f;
-     printf("L = %d\n", L);
+     //printf("L = %d\n", L);
  }
   else{
     printf("\nh is equal to zero, no bumps found\n"); exit(0);
@@ -396,12 +396,15 @@ int main(){
    srand((unsigned) 2);
 
    /* Print 5 random numbers from 0 to 49 */
-   for(int i = 0 ; i < 10 ; i++ ) {
+   /*for(int i = 0 ; i < 10 ; i++ ) {
       printf("%d\n", (rand() % 9)+1 );
-   }
-   int x0rand, wmax = 20;
+   }*/
+
+
+   int x0rand, wmax = 25;
    itermax = 10;
   for(int w = 1; w <=wmax;w++){
+     printf("%d\n",w);
      x0rand = (rand() % 9) +1;
      InitialiseWheel(&road, &wheel, x0rand, w+1);
      //PrintRoadWheelInfo(road, wheel);
@@ -417,7 +420,7 @@ int main(){
 }
 
   
-
+PrintRoad(road, sep);
 
 /*
    //int L = 2*wheel.diameter;
