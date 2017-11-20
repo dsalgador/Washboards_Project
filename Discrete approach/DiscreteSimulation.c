@@ -107,10 +107,13 @@ void DecrPile(ROAD * road, int xpos, int width){
 }
 
 void IncrPile(ROAD * road, int xpos, int width){
-    int width2 = min(width, f_max - (*road).piles[xpos].f); //check better?
+    int width2 = min(width, f_max - ((*road).piles[xpos].f +0) ); //check better?
     width = width2;
+    if(xpos == 0){
+      printf("\nwidth incr: %d\n", width);}
+    
 
-  (*road).piles[xpos].f = (*road).piles[xpos].f+width;
+    (*road).piles[xpos].f = (*road).piles[xpos].f+width;
   
       //(*road).piles[xpos].blocks[(*road).piles[xpos].f-1].filled = 1;
     for(int i = 0; i < width;i++){
@@ -134,7 +137,9 @@ void IncrPiles(ROAD * road, int xmin, int xmax, int width){
     if( !((xmin <0 & xmax <0) | (xmin > (*road).length & xmax > (*road).length)) ){
     for(int xpos = max(0,xmin); xpos <= min(xmax, (*road).length);xpos++){
       if(xpos <0 | xpos > (*road).length){printf("\n IncrPiles: negative xpos or greather than road length"); exit(2);}
-      IncrPile(road, xpos, width);
+     /* else if( (*road).piles[xpos].blocks[xpos] ){}
+      else{*/
+          IncrPile(road, xpos, width);//}
     }
   }
 }
@@ -401,7 +406,7 @@ int main(){
    }*/
 
 
-   int x0rand, wmax = 25;
+   int x0rand, wmax = 26;
    itermax = 10;
   for(int w = 1; w <=wmax;w++){
      printf("%d\n",w);
@@ -417,10 +422,11 @@ int main(){
        iter++;
      }
      if(iter >= itermax){wheel.in_road = 0;};
+     PrintRoad(road, sep);
 }
 
   
-PrintRoad(road, sep);
+//PrintRoad(road, sep);
 
 /*
    //int L = 2*wheel.diameter;
