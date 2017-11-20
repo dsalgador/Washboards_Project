@@ -83,6 +83,16 @@ void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, 
     }
 }
 
+void PrintRoadWheelInfo(ROAD road, WHEEL wheel){
+  printf("\n wheel.xf =  %d \n", wheel.xf );
+  printf(" wheel.x0 = %d  \n", wheel.x0);
+  printf(" wheel elevation = %d  \n", wheel.elevation);
+  printf(" wheel diameter = %d  \n", wheel.diameter);
+
+  printf(" f(wheel.xf) = %d   \n", road.piles[wheel.xf].f );
+  printf(" f(wheel.x0) = %d    \n", road.piles[wheel.x0].f);
+}
+
 void DecrPile(ROAD * road, int xpos, int width){
   int width2 = min(width, max((*road).piles[xpos].f - width , (*road).piles[xpos].f ));
   ///if(  ((*road).piles[xpos].f - width) <0 ){width2 = }
@@ -129,7 +139,7 @@ void IncrPiles(ROAD * road, int xmin, int xmax, int width){
 }
 
 int MoveToNextBump(ROAD road, WHEEL * wheel){
-     unsigned short poscount = (*wheel).xf;
+     int poscount = (*wheel).xf;
      while(poscount < road.length &  road.piles[poscount].f <= (*wheel).elevation) poscount++;
      
      //Now poscount have the position where the bump starts, i.e. x0+1
@@ -140,13 +150,16 @@ int MoveToNextBump(ROAD road, WHEEL * wheel){
    }
 
 int CurrentBumpHeight(ROAD road, WHEEL wheel){
-     unsigned short h_index;
+     int h_index = 0;
      for(int  i = 1; i<= wheel.diameter; i++){
-      printf("\nfor para h_index iter %d \n",i);
+      printf("\nfor para h_index iter %d \n",i);      
+      PrintRoadWheelInfo(road, wheel);
+      printf("road piles ...: %d\n", road.piles[wheel.xf +i].f );
          if(road.piles[wheel.xf +i].f > wheel.elevation & road.piles[wheel.xf +i].f > road.piles[wheel.xf + h_index].f )
           {h_index=i;                 
                  }
      }
+
      printf("\nAcabado el for para h_index \n");
      h_index += wheel.xf;
      printf("\n h_index = %d\n ", h_index);
@@ -183,13 +196,7 @@ int CurrentBumpHeight(ROAD * road, WHEEL * wheel){
 */
 
 
-void PrintRoadWheelInfo(ROAD road, WHEEL wheel){
-  printf("\n wheel.xf =  %d \n", wheel.xf );
-  printf(" wheel.x0 = %d  \n", wheel.x0);
-  printf(" wheel elevation = %d  \n", wheel.elevation);
-  printf(" f(wheel.xf) = %d   \n", road.piles[wheel.xf].f );
-  printf(" f(wheel.x0) = %d    \n", road.piles[wheel.x0].f);
-}
+
 
 
 int L_jump(int Beta, int bump_height){
@@ -205,7 +212,8 @@ void JumpIteration(ROAD * road, WHEEL * wheel){
   unsigned int h;
 
   if((*wheel).jumps == 0){
-     L = L_jump(beta, ( (*road).piles[(*wheel).xf].f-(*wheel).elevation) );   
+     //L = L_jump(beta, ( (*road).piles[(*wheel).xf].f-(*wheel).elevation) );   
+    L = 5;
    }
   else{
     printf("\nHe entrat al else the JumpIteration\n");
@@ -233,7 +241,9 @@ void JumpIteration(ROAD * road, WHEEL * wheel){
   if(!(*wheel).in_road){(*road).n +=1; 
                          (*road).occuped= 0 ;}
 
+
   (*wheel).jumps +=1;
+  printf("L = %d\n", L);
 
 }
 
@@ -244,6 +254,7 @@ void Jump(ROAD * road, WHEEL * wheel){
    //calculate h  
    unsigned int h = CurrentBumpHeight(*road, *wheel);
    printf("h: %d", h);
+   if(h != 0){
    int L;
    //Now we are in the current jump and we have to jump:
    L = L_jump(beta, h);
@@ -254,6 +265,11 @@ void Jump(ROAD * road, WHEEL * wheel){
    DecrPiles(road, (*wheel).x0+1, (*wheel).xf , 1);
    PrintRoad(*road, sep);
    (*wheel).elevation = (*road).piles[(*wheel).xf+1].f;
+   printf("L = %d\n", L);
+ }
+  else{
+    printf("\nh is equal to zero, no bumps found\n"); exit(0);
+  }
 
 }
 
@@ -297,9 +313,18 @@ int main(){
    //Initial jump
    JumpIteration(&road, &wheel);
    //JumpIteration(&road, &wheel);
+   PrintRoadWheelInfo(road, wheel);
+   PrintRoad(road, sep);
    Jump(&road, &wheel);
-   //Jump(&road, &wheel);
+  //PrintRoadWheelInfo(road, wheel);
 
+   Jump(&road, &wheel);
+   PrintRoadWheelInfo(road, wheel);
+   Jump(&road, &wheel);
+   PrintRoadWheelInfo(road, wheel);
+
+
+  
 
 
 /*
@@ -333,12 +358,12 @@ int main(){
   
 
 
-    
-    
+  
+   /*
    //search the first bump that the wheel is going to find and update the wheel positions
-   /*unsigned short poscount = MoveToNextBump(road, &wheel);
+   int poscount = MoveToNextBump(road, &wheel);
    //calculate h  
-   unsigned int h = CurrentBumpHeight(road, wheel);
+   int h = CurrentBumpHeight(road, wheel);
    printf("h: %d", h);
 
    //Now we are in the current jump and we have to jump:
@@ -350,8 +375,8 @@ int main(){
    DecrPiles(&road, wheel.x0+1, wheel.xf , 1);
    PrintRoad(road, sep);
    wheel.elevation = road.piles[wheel.xf+1].f;
-   */
-
+   
+*/
   /*
    JumpIteration(&road, &wheel);
    PrintRoad(road, sep);

@@ -7,7 +7,7 @@ typedef struct {
 
 typedef struct {
 	unsigned short height; // How many blocks has the pile 'f_max'
-	unsigned short f; //
+	int f; //
 	BLOCK * blocks; //BLOCKs of the pile, 
 } PILE;
 
