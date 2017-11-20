@@ -292,6 +292,7 @@ int main(){
    IncrPile(&road, 27, 2);
    IncrPiles(&road, 40, 42, 1);
    IncrPile(&road, 41, 1);
+   IncrPile(&road, 47, 1);
 
    PrintRoad(road, sep);
    
