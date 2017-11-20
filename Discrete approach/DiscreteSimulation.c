@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 //#include <stdbool.h>
 
 #include "DiscreteSimulation.h"
 
 #define F_filename "F_matrix.txt"
-#define f_max (unsigned short) 11
+#define f_max (unsigned short) 20
 #define r (unsigned int) 100 //period of the road 60
 #define d (unsigned int) 7 //7
 #define beta (unsigned int) 5 //3
@@ -306,7 +307,8 @@ int main(){
   //Initialise the ROAD 
    ROAD road;
    char sep[] = "";
-   InitialiseRoad(&road, 3, ' ', '.');
+   int depth = 5;
+   InitialiseRoad(&road, depth, ' ', '.');
 
    IncrPile(&road, 0, 1);
 
@@ -359,13 +361,13 @@ int main(){
      iter++;
    }
 
-
+/*
    InitialiseWheel(&road, &wheel, 3, 2);
    PrintRoadWheelInfo(road, wheel);
   JumpIteration(&road, &wheel);
   PrintRoad(road, sep);
 
-   itermax = 3; iter = 0;
+   itermax = 10; iter = 0;
    while(wheel.in_road & iter < itermax){
      Jump(&road, &wheel);
      iter++;
@@ -377,13 +379,42 @@ int main(){
   JumpIteration(&road, &wheel);
   PrintRoad(road, sep);
 
-   itermax = 3; iter = 0;
+   itermax = 10; iter = 0;
    while(wheel.in_road & iter < itermax){
      Jump(&road, &wheel);
      iter++;
    }
    if(iter >= itermax){wheel.in_road = 0;};
 
+*/
+
+
+
+   /* Intializes random number generator */
+   time_t t;
+   //srand((unsigned) time(&t));
+   srand((unsigned) 2);
+
+   /* Print 5 random numbers from 0 to 49 */
+   for(int i = 0 ; i < 10 ; i++ ) {
+      printf("%d\n", (rand() % 9)+1 );
+   }
+   int x0rand, wmax = 20;
+   itermax = 10;
+  for(int w = 1; w <=wmax;w++){
+     x0rand = (rand() % 9) +1;
+     InitialiseWheel(&road, &wheel, x0rand, w+1);
+     //PrintRoadWheelInfo(road, wheel);
+     JumpIteration(&road, &wheel);
+     //PrintRoad(road, sep);
+
+     iter = 0;
+     while(wheel.in_road & iter < itermax){
+       Jump(&road, &wheel);
+       iter++;
+     }
+     if(iter >= itermax){wheel.in_road = 0;};
+}
 
   
 
