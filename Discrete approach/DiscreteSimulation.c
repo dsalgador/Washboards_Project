@@ -8,10 +8,11 @@
 #include "DiscreteSimulation.h"
 
 #define F_filename "F_matrix.txt"
-#define f_max (unsigned short) 20
-#define r (unsigned int) 100 //period of the road 60
-#define d (unsigned int) 7 //7
-#define beta (unsigned int) 5 //3
+#define f_max (unsigned short) 15
+#define r (unsigned int) 150 //period of the road 60
+#define d (unsigned int) 5 //7
+#define beta (unsigned int) 20 //3
+//presentation w = 35, d 7 beta 5 gmax 15
 
  #define max(a,b) \
    ({ __typeof__ (a) _a = (a); \
@@ -75,7 +76,6 @@ void InitialiseRoad(ROAD * F, unsigned short initial_height, char simbol_empty, 
         for(int j = 0; j< (int) (*F).piles[i].f;j++){
           (*F).piles[i].blocks[j].filled = 1;
           //(*F).piles[i].blocks[j].simbol = simbol_filled;
-
         }
         for(int k = (int) (*F).piles[i].f; k < (int) (*F).piles[i].height;k++){
           (*F).piles[i].blocks[k].filled = 0;
@@ -230,10 +230,16 @@ void JumpIteration(ROAD * road, WHEEL * wheel){
   unsigned int h;
 
   if((*wheel).jumps == 0){
-     //L = L_jump(beta, ( (*road).piles[(*wheel).xf].f-(*wheel).elevation) );   
+     //L = L_jump(beta, ( (*road).piles[(*wheel).xf].f-(*wheel).elevation) );  
+     /*L = (rand() % 6) + d; 
+
+     printf("\nInital L = %d\n", L);*/
     L = 5;
    }
-  else{
+
+   
+   else{ printf("\nAnava a entrar al else de JumpIteration\n") ;exit(0);}
+  /*else{
     //printf("\nHe entrat al else the JumpIteration\n");
     poscount = MoveToNextBump(*road, wheel);
     //printf("poscount: %d", poscount);
@@ -245,7 +251,7 @@ void JumpIteration(ROAD * road, WHEEL * wheel){
 
    //Now we are in the current jump and we have to jump:
     L = L_jump(beta, h); }
-
+*/
   (*wheel).xf += L;
   (*wheel).x0 += L;
   IncrPiles(road, (*wheel).x0- (*wheel).diameter+1, (*wheel).xf - (*wheel).diameter, 1);
@@ -327,11 +333,14 @@ int main(){
   FILE *f = fopen(F_filename, "w");
   if (f == NULL){printf("Error opening file!\n");exit(1); }
 
+  FILE *f2 = fopen("InitialRoad.txt", "w");
+  if (f2 == NULL){printf("Error opening initialroad file!\n");exit(1); }
+
     
   //Initialise the ROAD 
    ROAD road;
    char sep[] = "";
-   int depth = 5;
+   int depth = 6;
    InitialiseRoad(&road, depth, ' ', '.');
 
    IncrPile(&road, 0, 1);
@@ -341,6 +350,9 @@ int main(){
    IncrPile(&road, 40, 1);
    IncrPile(&road, 70, 1);
 
+   IncrPile(&road, 100, 1);
+   IncrPile(&road, 140, 1);
+
    //OLD PROFILE
    /*IncrPiles(&road, 24,28 ,1);
    IncrPile(&road, 25, 1);
@@ -349,6 +361,8 @@ int main(){
    IncrPile(&road, 41, 1);
    IncrPile(&road, 47, 1);*/
    PrintRoad(road, sep);
+
+
    
 
 
@@ -372,7 +386,7 @@ int main(){
  }
 */
   //}
-
+   //WriteMatrixToFile(&f2,road);
 
    JumpIteration(&road, &wheel);
    //JumpIteration(&road, &wheel);
@@ -425,15 +439,15 @@ int main(){
    }*/
 
 
-   int x0rand, wmax = 208;
+   int x0rand, wmax = 35;
    itermax = 10;
   for(int w = 1; w <=wmax;w++){
-     printf("%d\n",w);
+     printf("\n w = %d\n",w); /*
      PrintRoadWheelInfo(road, wheel);
-     PrintRoad(road, sep);
+     PrintRoad(road, sep);*/
 
      x0rand = (rand() % 9) +1;
-     printf("\n x0rand %d \n", x0rand);
+     //printf("\n x0rand %d \n", x0rand);
      InitialiseWheel(&road, &wheel, x0rand, w+1);
      if(wheel.xf == 99){printf("iter %d  %d\n", w, wheel.xf);}
       //if(w == 26){ PrintRoadWheelInfo(road, wheel);}
@@ -452,7 +466,7 @@ int main(){
        iter++;
      }
      if(iter >= itermax){wheel.in_road = 0;};
-     //PrintRoad(road, sep);
+     PrintRoad(road, sep);
 }
 
   
@@ -522,6 +536,7 @@ PrintRoad(road, sep);
 
    PrintRoadWheelInfo(road, wheel);
    PrintRoad(road, sep);
+     WriteMatrixToFile(&f,road);
 
 
 
